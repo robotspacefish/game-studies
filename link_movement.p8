@@ -2,14 +2,12 @@ pico-8 cartridge // http://www.pico-8.com
 version 27
 __lua__
 function _init()
-  player={
-    x=59,
-    y=59,
-    vx=0,
-    vy=0,
-    spr=1,
-    flip=false
-  }
+  x=59
+  y=59
+  vx=0
+  vy=0
+  p_spr=1
+  p_flip=false
 
   speed=2
 end
@@ -17,32 +15,32 @@ end
 function _update()
   --controls
   if (btn(⬅️)) then
-    player.x-=speed -- left
-    player.spr=3
-    player.flip=true
+    x-=speed -- left
+    p_spr=3
+    p_flip=true
   elseif (btn(➡️)) then
-    player.x+=speed -- right
-    player.spr=3
-    player.flip=false
+    x+=speed -- right
+    p_spr=3
+    p_flip=false
   elseif (btn(⬆️)) then
-    player.y-=speed -- up
-    player.spr=2
-    player.flip=false
+    y-=speed -- up
+    p_spr=2
+    p_flip=false
   elseif (btn(⬇️)) then
-    player.y+=speed --down
-    player.spr=1
-    player.flip=false
+    y+=speed --down
+    p_spr=1
+    p_flip=false
   end
 
   --if run off screen warp to other side
-  if (player.x>128) then player.x=-8 end
-  if (player.x<-8) then player.x=128 end
+  if (x>128) then x=-8 end
+  if (x<-8) then x=128 end
 end
 
 function _draw()
   cls()
   map(0, 0, 0,0,16,16)
-  spr(player.spr,player.x,player.y, 1, 1, player.flip)
+  spr(p_spr,x,y, 1, 1, p_flip)
 
 end
 __gfx__
