@@ -35,6 +35,9 @@ function _update()
   --if run off screen warp to other side
   if (x>128) then x=-8 end
   if (x<-8) then x=128 end
+  if (y<-8) then y=128 end
+  if (y>128) then y=-8 end
+
 end
 
 function _draw()
