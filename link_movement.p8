@@ -2,10 +2,9 @@ pico-8 cartridge // http://www.pico-8.com
 version 27
 __lua__
 function _init()
-  x=59
-  y=59
-  vx=0
-  vy=0
+  DIMENSION=128
+  x=DIMENSION/2-4
+  y=DIMENSION/2-4
   p_spr=1
   p_flip=false
   vx=0
