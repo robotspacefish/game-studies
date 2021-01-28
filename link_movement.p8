@@ -8,29 +8,44 @@ function _init()
   vy=0
   p_spr=1
   p_flip=false
-
+  vx=0
+  vy=0
   speed=2
 end
 
 function _update()
+  vx=0
+  vy=0
+
   --controls
   if (btn(⬅️)) then
-    x-=speed -- left
+    -- x-=speed -- left
     p_spr=3
     p_flip=true
+    vx=-1
+    vy=0
   elseif (btn(➡️)) then
-    x+=speed -- right
+    -- x+=speed -- right
     p_spr=3
     p_flip=false
+    vx=1
+    vy=0
   elseif (btn(⬆️)) then
-    y-=speed -- up
+    -- y-=speed -- up
     p_spr=2
     p_flip=false
+    vy=-1
+    vx=0
   elseif (btn(⬇️)) then
-    y+=speed --down
+    -- y+=speed --down
     p_spr=1
     p_flip=false
+    vy=1
+    vx=0
   end
+
+  x += vx * speed
+  y += vy * speed
 
   --if run off screen warp to other side
   if (x>128) then x=-8 end
