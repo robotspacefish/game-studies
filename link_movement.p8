@@ -13,33 +13,37 @@ function _init()
 end
 
 function _update()
+  -- reset (stop moving)
   vx=0
   vy=0
 
   --controls
   if (btn(⬅️)) then
-    -- x-=speed -- left
     p_spr=3
     p_flip=true
     vx=-1
+    -- vy=align(y, 8)
     vy=0
-  elseif (btn(➡️)) then
-    -- x+=speed -- right
+  end
+  if (btn(➡️)) then
     p_spr=3
     p_flip=false
     vx=1
-    vy=0
-  elseif (btn(⬆️)) then
-    -- y-=speed -- up
+    vy=align(y, 8)
+    -- vy=0
+  end
+  if (btn(⬆️)) then
     p_spr=2
     p_flip=false
     vy=-1
+    -- vx= align(x, 8)
     vx=0
-  elseif (btn(⬇️)) then
-    -- y+=speed --down
+  end
+  if (btn(⬇️)) then
     p_spr=1
     p_flip=false
     vy=1
+    -- vx= align(x, 8)
     vx=0
   end
 
@@ -49,8 +53,8 @@ function _update()
   --if run off screen warp to other side
   if (x>128) then x=-8 end
   if (x<-8) then x=128 end
-  if (y<-8) then y=128 end
-  if (y>128) then y=-8 end
+  if (y<-8) then y=72 end
+  if (y>72) then y=-8 end
 
 end
 
