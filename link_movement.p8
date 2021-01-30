@@ -74,13 +74,14 @@ function _draw()
 end
 
 function align(val, alignTo)
-  local diff = val % alignTo
-  local halfway = (alignTo - 1)/2
+  local remainder = val % alignTo
+  -- local halfway = flr(alignTo - 1)/2
+  local halfway = alignTo/2
 
-  if (diff > halfway) then
-    return alignTo-diff
+  if (remainder > halfway) then
+    return alignTo-remainder
   else
-    return -diff
+    return -remainder
   end
 
 end
