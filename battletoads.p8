@@ -10,6 +10,10 @@ function _init()
 
   start_motion = false
 
+  init_top_row()
+end
+
+function init_top_row()
   for i = 0, 7 do
     local w = 16
     local x1 = i * w
