@@ -18,7 +18,7 @@ function init_top_row()
     local w = 16
     local x1 = i * w
     local x2 = x1 + w
-    add(top_row, {x1 = x1, w = w, x2 = x2 })
+    add(top_row, { x1 = x1, w = w, x2 = x2 })
   end
 end
 
@@ -34,10 +34,10 @@ function _draw()
   -- draw top row
   for i = 1, #top_row do
     if is_moving_forward then
-      -- local x = top_row[i].x1 - speed
-      top_row[i].x1 = top_row[i].x1 - speed
+      top_row[i].x1 -= speed
     end
-      spr(64, top_row[i].x1, 0, 2, 2)
+
+    spr(64, top_row[i].x1, 0, 2, 2)
   end
 
 end
