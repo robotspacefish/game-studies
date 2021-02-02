@@ -30,6 +30,7 @@ function _draw()
  	cls()
   palt(0, false) -- make black visible
   palt(15, true) -- make peach transparent
+  draw_grid()
 
   -- draw top row
   for i = 1, #top_row do
@@ -40,6 +41,14 @@ function _draw()
     spr(64, top_row[i].x1, 0, 2, 2)
   end
 
+end
+
+function draw_grid()
+  -- draw grid
+  for i = 0, 8 do
+    line(i * 16, 0, i* 16, 128, 6)
+    line (0, i * 16, 128, i * 16, 6)
+  end
 end
 
 function _update()
