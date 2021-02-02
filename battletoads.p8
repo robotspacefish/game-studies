@@ -5,7 +5,7 @@ __lua__
 function _init()
 
   is_moving_forward = false
-  speed = 0
+  speed = 1
   top_row = {}
 
   start_motion = false
@@ -29,7 +29,11 @@ function _draw()
 
   -- draw top row
   for i = 1, #top_row do
-    spr(64, top_row[i].x1, 0, 2, 2)
+    if is_moving_forward then
+      -- local x = top_row[i].x1 - speed
+      top_row[i].x1 = top_row[i].x1 - speed
+    end
+      spr(64, top_row[i].x1, 0, 2, 2)
   end
 
 end
@@ -37,7 +41,6 @@ end
 function _update()
   if (btn(➡️)) then
     is_moving_forward = true
-    speed += 1
   else
   -- speed = 0
     is_moving_forward = false
