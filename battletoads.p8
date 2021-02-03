@@ -36,7 +36,7 @@ end
 function _draw()
  	cls()
   palt(0, false) -- make black visible
-  palt(15, true) -- make peach transparent
+  palt(1, true) -- make darkblue transparent
 
   -- draw_grid()
 
