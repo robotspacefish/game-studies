@@ -97,31 +97,41 @@ function _update()
       set_new_x2(third_row, i)
     end
 
-    if (first_row[1].x2 < 0) del_first_value(first_row)
+    if (is_offscreen_left(first_row[1].x2)) del_first_value(first_row)
 
-    if second_row[1].x2 < 0 then
+    if is_offscreen_left(second_row[1].x2) then
       del_first_value(second_row)
       del_first_value(third_row)
     end
 
-    if (first_row[#first_row].x2 <= 148) then -- 148 smoother addition since it's out of view
-      local x1 = first_row[#first_row - 1].x2
-      add(first_row, { x1 = x1, w = 16, x2 = x1 + 16 })
-    end
+    if (should_add_bg_spr(first_row[#first_row].x2)) add_bg_spr(first_row, 16 )
 
-    if (second_row[#second_row].x2 <= 148) then
-      local x1 = second_row[#second_row - 1].x2
-      add(second_row, { x1 = x1, w = 32, x2 = x1 + 32 })
-      add(third_row, { x1 = x1, w = 32, x2 = x1 + 32 })
+    if should_add_bg_spr(second_row[#second_row].x2) then
+      add_bg_spr(second_row, 32)
+      add_bg_spr(third_row, 32)
     end
 
   end
+end
+
+function add_bg_spr(tbl, w)
+  local x1 = tbl[#tbl - 1].x2
+  add(tbl, { x1 = x1, w = w, x2 = x1 + w })
+end
+
+
+function should_add_bg_spr(x)
+  -- 148 smoother addition since it's out of view
+  return x <= 148
 end
 
 function del_first_value(tbl)
   del(tbl, tbl[1])
 end
 
+function is_offscreen_left(x)
+  return x <= 0
+end
 
 function set_new_x2(tbl, idx)
     tbl[idx].x2 = tbl[idx].x1 + tbl[idx].w
