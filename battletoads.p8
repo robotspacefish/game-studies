@@ -93,7 +93,8 @@ function draw_grid()
 end
 
 function _update()
-  if btn(2) and player.y > 48 then -- up
+  if btn(2) and player.y + 6 > 48 then -- up
+  -- + 6 so it looks like the player is driving close to the top edge
     player.y -= player.speed
   end
 
