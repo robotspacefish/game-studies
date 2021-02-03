@@ -4,7 +4,7 @@ __lua__
 
 function _init()
 
-  is_moving_forward = false
+  is_moving_forward = true
   speed = 3
   first_row = {}
   second_row = {}
@@ -78,12 +78,12 @@ function draw_grid()
 end
 
 function _update()
-  if (btn(➡️)) then
-    is_moving_forward = true
-  else
-  -- speed = 0
-    is_moving_forward = false
-  end
+  -- if (btn(➡️)) then
+  --   is_moving_forward = true
+  -- else
+  -- -- speed = 0
+  --   is_moving_forward = false
+  -- end
 
   if is_moving_forward then
     -- update first row values
