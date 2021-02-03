@@ -83,7 +83,7 @@ function _update()
   if is_moving_forward then
     -- update first row values
     for i = 1, #first_row do
-    set_new_x2(first_row, i)
+      set_new_x2(first_row, i)
     end
 
     -- update second/third row values
@@ -92,13 +92,11 @@ function _update()
       set_new_x2(third_row, i)
     end
 
-    if (first_row[1].x2 < 0) then
-      del(first_row, first_row[1])
-    end
+    if (first_row[1].x2 < 0) del_first_value(first_row)
 
-    if (second_row[1].x2 < 0) then
-      del(second_row, second_row[1])
-      del(third_row, third_row[1])
+    if second_row[1].x2 < 0 then
+      del_first_value(second_row)
+      del_first_value(third_row)
     end
 
     if (first_row[#first_row].x2 <= 148) then -- 148 smoother addition since it's out of view
@@ -113,6 +111,10 @@ function _update()
     end
 
   end
+end
+
+function del_first_value(tbl)
+  del(tbl, tbl[1])
 end
 
 
