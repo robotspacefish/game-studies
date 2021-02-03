@@ -30,7 +30,7 @@ function init_first_row()
 end
 
 function debug(str, x, y, c)
-  print(str,x,y, c)
+  print(str, x, y, c)
 end
 
 function _draw()
@@ -62,6 +62,11 @@ function _draw()
 
   -- draw player
   spr(1, 8, 70, 4, 4)
+
+  -- debug
+  -- debug("first: "..#first_row, 0, 90, 7)
+  -- debug("second: "..#second_row, 0, 98, 7)
+  -- debug("third: "..#third_row, 0, 106, 7)
 end
 
 function draw_grid()
