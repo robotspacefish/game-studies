@@ -61,7 +61,7 @@ function _draw()
   end
 
   -- draw player
-  spr(1, 0, 70, 4, 4)
+  spr(1, 8, 70, 4, 4)
 end
 
 function draw_grid()
@@ -83,13 +83,13 @@ function _update()
   if is_moving_forward then
     -- update first row values
     for i = 1, #first_row do
-      first_row[i].x2 = first_row[i].x1 + first_row[i].w
+    set_new_x2(first_row, i)
     end
 
     -- update second/third row values
     for i = 1, #second_row do
-      second_row[i].x2 = second_row[i].x1 + second_row[i].w
-      third_row[i].x2 = third_row[i].x1 + third_row[i].w
+      set_new_x2(second_row, i)
+      set_new_x2(third_row, i)
     end
 
     if (first_row[1].x2 < 0) then
@@ -115,6 +115,10 @@ function _update()
   end
 end
 
+
+function set_new_x2(tbl, idx)
+    tbl[idx].x2 = tbl[idx].x1 + tbl[idx].w
+end
 
 __gfx__
 0000000011111111111001111111111111111111ffffffffffffffff000000000000000000000000000000000000000000000000000000000000000000000000
