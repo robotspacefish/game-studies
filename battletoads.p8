@@ -7,11 +7,13 @@ function _init()
   is_moving_forward = false
   speed = 3
   first_row = {}
-
+  second_row = {}
+  third_row = {}
 
   start_motion = false
 
   init_first_row()
+
 end
 
 function init_first_row()
@@ -20,6 +22,10 @@ function init_first_row()
     local x1 = i * w
     local x2 = x1 + w
     add(first_row, { x1 = x1, w = w, x2 = x2 })
+
+    add(second_row, {x1 = i * 32, w = 32, x2 = i * 32 + 32 })
+
+    add(third_row, { x1 = i * 32, w= 32, x2 = i * 32 + 32})
   end
 end
 
@@ -31,7 +37,8 @@ function _draw()
  	cls()
   palt(0, false) -- make black visible
   palt(15, true) -- make peach transparent
-  draw_grid()
+
+  -- draw_grid()
 
   -- draw top row
   for i = 1, #first_row do
@@ -39,7 +46,18 @@ function _draw()
       first_row[i].x1 -= speed
     end
 
-    spr(64, first_row[i].x1, 0, 2, 2)
+    spr(64, first_row[i].x1, 0, 2, 2) -- first_row
+  end
+
+  -- draw second/third rows
+  for i = 1, #second_row do
+    if is_moving_forward then
+      second_row[i].x1 -= speed
+      third_row[i].x1 -= speed
+    end
+
+    spr(66, second_row[i].x1, 16, 4, 4) -- second row
+    spr(70, third_row[i].x1, 48, 4, 2) -- third row
   end
 
 end
@@ -61,19 +79,37 @@ function _update()
   end
 
   if is_moving_forward then
-    -- update values
+    -- update first row values
     for i = 1, #first_row do
       first_row[i].x2 = first_row[i].x1 + first_row[i].w
+    end
+
+    -- update second/third row values
+    for i = 1, #second_row do
+      second_row[i].x2 = second_row[i].x1 + second_row[i].w
+      third_row[i].x2 = third_row[i].x1 + third_row[i].w
     end
 
     if (first_row[1].x2 < 0) then
       del(first_row, first_row[1])
     end
 
-    if (first_row[#first_row].x2 <= 129) then -- extra pixel (129) so it adds out of view
+    if (second_row[1].x2 < 0) then
+      del(second_row, second_row[1])
+      del(third_row, third_row[1])
+    end
+
+    if (first_row[#first_row].x2 <= 148) then -- 148 smoother addition since it's out of view
       local x1 = first_row[#first_row - 1].x2
       add(first_row, { x1 = x1, w = 16, x2 = x1 + 16 })
     end
+
+    if (second_row[#second_row].x2 <= 148) then
+      local x1 = second_row[#second_row - 1].x2
+      add(second_row, { x1 = x1, w = 32, x2 = x1 + 32 })
+      add(third_row, { x1 = x1, w = 32, x2 = x1 + 32 })
+    end
+
   end
 end
 
