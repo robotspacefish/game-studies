@@ -6,6 +6,9 @@ function _init()
 
   is_moving_forward = true
   speed = 3
+  top_bg_speed = 3
+  middle_bg_speed = 2
+  land_speed = 2
   first_row = {}
   second_row = {}
   third_row = {}
@@ -52,7 +55,7 @@ function _draw()
   -- draw top row
   for i = 1, #first_row do
     if is_moving_forward then
-      first_row[i].x1 -= speed
+      first_row[i].x1 -= top_bg_speed
     end
 
     spr(64, first_row[i].x1, 0, 2, 2) -- first_row
@@ -61,8 +64,8 @@ function _draw()
   -- draw second/third rows
   for i = 1, #second_row do
     if is_moving_forward then
-      second_row[i].x1 -= speed
-      third_row[i].x1 -= speed
+      second_row[i].x1 -= middle_bg_speed
+      third_row[i].x1 -= middle_bg_speed
     end
 
     spr(66, second_row[i].x1, 16, 4, 4) -- second row
