@@ -13,7 +13,7 @@ function _init()
 
   start_motion = false
 
-  init_first_row()
+  init_bg()
 
   player = {
     x = 8,
@@ -25,7 +25,7 @@ function _init()
   }
 end
 
-function init_first_row()
+function init_bg()
   for i = 0, 7 do
     local w = 16
     local x1 = i * w
