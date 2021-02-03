@@ -5,7 +5,7 @@ __lua__
 function _init()
 
   is_moving_forward = false
-  speed = 1
+  speed = 3
   first_row = {}
 
 
