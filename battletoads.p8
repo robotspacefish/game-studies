@@ -14,6 +14,14 @@ function _init()
 
   init_first_row()
 
+  player = {
+    x = 8,
+    y = 70,
+    spr = 1,
+    size = 4,
+    speed = 2,
+    is_jumping = false
+  }
 end
 
 function init_first_row()
@@ -61,7 +69,7 @@ function _draw()
   end
 
   -- draw player
-  spr(1, 8, 70, 4, 4)
+  spr(player.spr, player.x, player.y, player.size, player.size)
 
   -- debug
   -- debug("first: "..#first_row, 0, 90, 7)
@@ -78,12 +86,13 @@ function draw_grid()
 end
 
 function _update()
-  -- if (btn(➡️)) then
-  --   is_moving_forward = true
-  -- else
-  -- -- speed = 0
-  --   is_moving_forward = false
-  -- end
+  if btn(2) and player.y > 48 then -- up
+    player.y -= player.speed
+  end
+
+  if btn(3) and player.y < 80 then -- down
+    player.y += player.speed
+  end
 
   if is_moving_forward then
     -- update first row values
