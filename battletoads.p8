@@ -35,8 +35,6 @@ function _draw()
   palt(0, false) -- make black visible
   palt(1, true) -- make darkblue transparent
 
-  -- draw_grid()
-
   for i = 0, 7 do
     -- top row 16x16
     spr(64, i * 16 + top_startX, 0, 2, 2)
@@ -73,6 +71,7 @@ function _draw()
   end
 
   -- debug
+  draw_grid()
   -- debug(startX, 0, 98, 7)
 end
 
