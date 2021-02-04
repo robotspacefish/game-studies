@@ -8,7 +8,6 @@ function _init()
   top_bg_speed = 6
   middle_bg_speed = 5
   land_speed = 8
-  bottom_row = {}
   land_top = {}
   land_bottom = {}
   top_startX = 0
@@ -83,7 +82,6 @@ function create_land()
   for i = 0, 10 do
     add(land_top, { x1 = i * 32, w= 32, x2 = i * 32 + 32})
     add(land_bottom, { x1 = i * 32, w= 32, x2 = i * 32 + 32})
-    add(bottom_row, { x1 = i * 16, w= 16, x2 = i * 16 + 16})
   end
 end
 
@@ -115,11 +113,7 @@ function draw_land()
     spr(200, land_bottom[i].x1, 96, 4, 2) -- bottom middle
     end
   end
-
-  for i = 1, #bottom_row do
-    if (is_moving_forward) bottom_row[i].x1 -= land_speed
-    spr(204, bottom_row[i].x1, 112, 2, 2)
-  end
+end
 end
 
 
@@ -136,22 +130,14 @@ function _update()
     player.y += player.vy
   end
 
+  -- update land
   if is_moving_forward then
-    -- update land x2 values
     for i = 1, #land_top do
       set_new_x2(land_top, i)
       set_new_x2(land_bottom, i)
     end
 
-    -- update bottom row values
-    for i = 1, #bottom_row do
-      set_new_x2(bottom_row, i)
-    end
-
-    if (should_add_bg_spr(bottom_row[#bottom_row].x2)) add_bg_spr_to_end(bottom_row, 16 )
-
-    -- update land
-      if (is_offscreen_left(land_top[#land_top].x2)) reset_land()
+    if (is_offscreen_left(land_top[#land_top].x2)) reset_land()
 
   end -- end is_moving_forward
 end
