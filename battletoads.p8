@@ -43,18 +43,23 @@ function _draw()
     spr(64, i * 16 + top_startX + 128, 0, 2, 2)
 
     -- second row 32x32
-    spr(66, i * 32 + top_startX, 16, 4, 4)
+    spr(66, i * 32 + middle_startX, 16, 4, 4)
 
     -- third row 32x16
-    spr(70, i * 32 + top_startX, 48, 4, 2)
+    spr(70, i * 32 + middle_startX, 48, 4, 2)
 
     -- static middle row
     spr(96, i * 16, 64, 2, 2)
+
+    -- bottom row 16x16
+    spr(204, i * 16 + bottom_startX, 112, 2, 2)
+    spr(204, i * 16 + bottom_startX + 128, 112, 2, 2)
   end
 
   -- reset
   if (top_startX <= -128) top_startX = 0
-  if (top_endX <= 0) top_endX = 128
+  if (middle_startX <= -128) middle_startX = 0
+  if (bottom_startX <= -128) bottom_startX = 0
 
   -- draw land
   draw_land()
@@ -115,12 +120,12 @@ function draw_land()
     end
   end
 end
-end
 
 
 function _update()
   top_startX -= top_bg_speed
-  top_endX -= top_bg_speed
+  middle_startX -= middle_bg_speed
+  bottom_startX -= bottom_bg_speed
 
   if btn(2) and player.y + 6 > 38 then -- up
   -- + 6 so it looks like the player is driving close to the top edge
