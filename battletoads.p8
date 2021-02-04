@@ -185,7 +185,7 @@ function _update()
       set_new_x2(bottom_row, i)
     end
 
-    if (is_offscreen_left(first_row[1].x2)) del_first_value(first_row)
+    if (should_add_bg_spr(bottom_row[#bottom_row].x2)) add_bg_spr_to_end(bottom_row, 16 )
     -- if (is_offscreen_left(bottom_row[1].x2)) del_first_value(bottom_row)
 
     if is_offscreen_left(second_row[1].x2) then
