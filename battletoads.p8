@@ -61,16 +61,13 @@ function _draw()
   -- draw player
   spr(player.spr, player.x, player.y + sin(time() * 2) * 3, player.size, player.size)
 
-  -- draw shadow
+  -- draw player shadow
   if land_top[1].x1 < 0 and land_top[#land_top].x1 > 0 then
     spr(9, player.x + 2, player.y + 32, 2, 2)
   end
 
   -- debug
-  -- debug(player.y + sin(flr(rnd(20))), 0, 90, 7)
-  -- if (is_offscreen_left(land_top[1].x2)) debug("resetting land", 0, 80, 7)
-  -- debug("second: "..#land_bottom, 0, 98, 7)
-  -- debug("third: "..#third_row, 0, 106, 7)
+  -- debug(startX, 0, 98, 7)
 end
 
 function draw_grid()
