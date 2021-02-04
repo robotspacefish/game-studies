@@ -8,9 +8,6 @@ function _init()
   top_bg_speed = 6
   middle_bg_speed = 5
   land_speed = 8
-  first_row = {}
-  second_row = {}
-  third_row = {}
   bottom_row = {}
   land_top = {}
   land_bottom = {}
@@ -18,8 +15,7 @@ function _init()
   startX = 0
   endX = 128
   -- start_motion = false
-
-  init_bg()
+  create_land()
 
   player = {
     x = 8,
@@ -163,17 +159,6 @@ function _update()
   end
 
   if is_moving_forward then
-    -- update first row values
-    for i = 1, #first_row do
-      set_new_x2(first_row, i)
-    end
-
-    -- update second/third row values
-    for i = 1, #second_row do
-      set_new_x2(second_row, i)
-      set_new_x2(third_row, i)
-    end
-
     -- update land x2 values
     for i = 1, #land_top do
       set_new_x2(land_top, i)
@@ -186,33 +171,9 @@ function _update()
     end
 
     if (should_add_bg_spr(bottom_row[#bottom_row].x2)) add_bg_spr_to_end(bottom_row, 16 )
-    -- if (is_offscreen_left(bottom_row[1].x2)) del_first_value(bottom_row)
-
-    if is_offscreen_left(second_row[1].x2) then
-      del_first_value(second_row)
-      del_first_value(third_row)
-    end
-
-    if (should_add_bg_spr(first_row[#first_row].x2)) add_bg_spr_to_end(first_row, 16 )
-    if (should_add_bg_spr(bottom_row[#first_row].x2)) add_bg_spr_to_end(bottom_row, 16 )
-
-    if should_add_bg_spr(second_row[#second_row].x2) then
-      add_bg_spr_to_end(second_row, 32)
-      add_bg_spr_to_end(third_row, 32)
-    end
-
 
     -- update land
       if (is_offscreen_left(land_top[#land_top].x2)) reset_land()
-    -- if is_offscreen_left(land_top[1].x2) then
-    --   del_first_value(land_top)
-    --   del_first_value(land_bottom)
-    -- end
-
-    -- if should_add_bg_spr(land_top[#land_top].x2) then
-    --   add_bg_spr(land_top, 32)
-    --   add_bg_spr(land_bottom, 32)
-    -- end
 
   end -- end is_moving_forward
 end
