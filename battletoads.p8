@@ -87,7 +87,7 @@ function _draw()
   draw_land()
 
   -- draw player
-  spr(player.spr, player.x, player.y, player.size, player.size)
+  spr(player.spr, player.x, player.y + sin(time() * 2) * 3, player.size, player.size)
 
   -- draw shadow
   if land_top[1].x1 < 0 and land_top[#land_top].x1 > 0 then
