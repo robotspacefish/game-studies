@@ -15,7 +15,8 @@ function _init()
   land_top = {}
   land_bottom = {}
   land_is_waiting = false
-
+  startX = 0
+  endX = 128
   -- start_motion = false
 
   init_bg()
@@ -59,31 +60,24 @@ function _draw()
 
   -- draw_grid()
 
-  -- draw top row
-  for i = 1, #first_row do
-    if is_moving_forward then
-      first_row[i].x1 -= top_bg_speed
-    end
-
-    spr(64, first_row[i].x1, 0, 2, 2) -- first_row
-  end
-
-  -- draw second/third rows
-  for i = 1, #second_row do
-    if is_moving_forward then
-      second_row[i].x1 -= middle_bg_speed
-      third_row[i].x1 -= middle_bg_speed
-    end
-
-    spr(66, second_row[i].x1, 16, 4, 4) -- second row
-    spr(70, third_row[i].x1, 48, 4, 2) -- third row
-  end
-
-  -- draw static middle row
   for i = 0, 7 do
+    -- top row 16x16
+    spr(64, i * 16 + startX, 0, 2, 2)
+    spr(64, i * 16 + endX, 0, 2, 2)
+
+    -- second row 32x32
+    spr(66, i * 32 + startX, 16, 4, 4)
+
+    -- third row 32x16
+    spr(70, i * 32 + startX, 48, 4, 2)
+
+    -- static middle row
     spr(96, i * 16, 64, 2, 2)
   end
 
+  -- reset
+  if (startX <= -128) startX = 0
+  if (endX <= 0) endX = 128
 
   -- draw land
   draw_land()
@@ -156,6 +150,9 @@ end
 
 
 function _update()
+  startX -= top_bg_speed
+  endX -= top_bg_speed
+
   if btn(2) and player.y + 6 > 38 then -- up
   -- + 6 so it looks like the player is driving close to the top edge
     player.y -= player.vy
