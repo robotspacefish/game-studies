@@ -11,10 +11,9 @@ function _init()
   bottom_row = {}
   land_top = {}
   land_bottom = {}
-  land_is_waiting = false
   startX = 0
   endX = 128
-  -- start_motion = false
+
   create_land()
 
   player = {
