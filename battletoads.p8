@@ -83,8 +83,6 @@ function _draw()
   -- draw static middle row
   for i = 0, 7 do
     spr(96, i * 16, 64, 2, 2)
-    spr(236, i * 16, 80, 2, 2)
-    spr(236, i * 16, 96, 2, 2)
   end
 
 
