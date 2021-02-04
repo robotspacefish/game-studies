@@ -25,25 +25,6 @@ function _init()
   }
 end
 
-function init_bg()
-
-
-  for i = 0, 7 do
-    local w = 16
-    local x1 = i * w
-    local x2 = x1 + w
-    add(first_row, { x1 = x1, w = w, x2 = x2 })
-
-    add(second_row, {x1 = i * 32, w = 32, x2 = i * 32 + 32 })
-
-    add(third_row, { x1 = i * 32, w= 32, x2 = i * 32 + 32 })
-
-    add(bottom_row, { x1 = x1, w = w, x2 = x2 })
-  end
-
-  create_land()
-end
-
 function debug(str, x, y, c)
   print(str, x, y, c)
 end
