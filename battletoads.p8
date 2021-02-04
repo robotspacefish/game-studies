@@ -12,6 +12,7 @@ function _init()
   first_row = {}
   second_row = {}
   third_row = {}
+  bottom_row = {}
   land_top = {}
   land_bottom = {}
   land_is_waiting = false
@@ -41,6 +42,8 @@ function init_bg()
     add(second_row, {x1 = i * 32, w = 32, x2 = i * 32 + 32 })
 
     add(third_row, { x1 = i * 32, w= 32, x2 = i * 32 + 32 })
+
+    add(bottom_row, { x1 = x1, w = w, x2 = x2 })
   end
 
   create_land()
@@ -113,6 +116,7 @@ function create_land()
   for i = 0, 10 do
     add(land_top, { x1 = i * 32, w= 32, x2 = i * 32 + 32})
     add(land_bottom, { x1 = i * 32, w= 32, x2 = i * 32 + 32})
+    add(bottom_row, { x1 = i * 16, w= 16, x2 = i * 16 + 16})
   end
 end
 
@@ -143,8 +147,11 @@ function draw_land()
     spr(196, land_top[i].x1, 64, 4, 4) -- top middle
     spr(200, land_bottom[i].x1, 96, 4, 2) -- bottom middle
     end
+  end
 
-
+  for i = 1, #bottom_row do
+    if (is_moving_forward) bottom_row[i].x1 -= land_speed
+    spr(204, bottom_row[i].x1, 112, 2, 2)
   end
 end
 
@@ -177,7 +184,13 @@ function _update()
       set_new_x2(land_bottom, i)
     end
 
+    -- update bottom row values
+    for i = 1, #bottom_row do
+      set_new_x2(bottom_row, i)
+    end
+
     if (is_offscreen_left(first_row[1].x2)) del_first_value(first_row)
+    -- if (is_offscreen_left(bottom_row[1].x2)) del_first_value(bottom_row)
 
     if is_offscreen_left(second_row[1].x2) then
       del_first_value(second_row)
@@ -185,6 +198,7 @@ function _update()
     end
 
     if (should_add_bg_spr(first_row[#first_row].x2)) add_bg_spr_to_end(first_row, 16 )
+    if (should_add_bg_spr(bottom_row[#first_row].x2)) add_bg_spr_to_end(bottom_row, 16 )
 
     if should_add_bg_spr(second_row[#second_row].x2) then
       add_bg_spr_to_end(second_row, 32)
