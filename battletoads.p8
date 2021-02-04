@@ -25,7 +25,7 @@ function _init()
     y = 70,
     spr = 1,
     size = 4,
-    speed = 2
+    vy = 2
   }
 end
 
@@ -158,11 +158,11 @@ end
 function _update()
   if btn(2) and player.y + 6 > 38 then -- up
   -- + 6 so it looks like the player is driving close to the top edge
-    player.y -= player.speed
+    player.y -= player.vy
   end
 
   if btn(3) and player.y < 72 then -- down
-    player.y += player.speed
+    player.y += player.vy
   end
 
   if is_moving_forward then
