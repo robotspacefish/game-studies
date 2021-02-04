@@ -5,7 +5,6 @@ __lua__
 function _init()
 
   is_moving_forward = true
-  speed = 3
   top_bg_speed = 6
   middle_bg_speed = 5
   land_speed = 8
@@ -17,7 +16,7 @@ function _init()
   land_bottom = {}
   land_is_waiting = false
 
-  start_motion = false
+  -- start_motion = false
 
   init_bg()
 
