@@ -184,11 +184,11 @@ function _update()
       del_first_value(third_row)
     end
 
-    if (should_add_bg_spr(first_row[#first_row].x2)) add_bg_spr(first_row, 16 )
+    if (should_add_bg_spr(first_row[#first_row].x2)) add_bg_spr_to_end(first_row, 16 )
 
     if should_add_bg_spr(second_row[#second_row].x2) then
-      add_bg_spr(second_row, 32)
-      add_bg_spr(third_row, 32)
+      add_bg_spr_to_end(second_row, 32)
+      add_bg_spr_to_end(third_row, 32)
     end
 
 
@@ -207,7 +207,7 @@ function _update()
   end -- end is_moving_forward
 end
 
-function add_bg_spr(tbl, w)
+function add_bg_spr_to_end(tbl, w)
   local x1 = tbl[#tbl - 1].x2
   add(tbl, { x1 = x1, w = w, x2 = x1 + w })
 end
