@@ -6,13 +6,15 @@ function _init()
 
   is_moving_forward = true
   speed = 3
-  top_bg_speed = 3
-  middle_bg_speed = 2
-  land_speed = 2
+  top_bg_speed = 6
+  middle_bg_speed = 5
+  land_speed = 8
   first_row = {}
   second_row = {}
   third_row = {}
-  land = {}
+  land_top = {}
+  land_bottom = {}
+  land_is_waiting = false
 
   start_motion = false
 
@@ -23,12 +25,13 @@ function _init()
     y = 70,
     spr = 1,
     size = 4,
-    speed = 2,
-    is_jumping = false
+    speed = 2
   }
 end
 
 function init_bg()
+
+
   for i = 0, 7 do
     local w = 16
     local x1 = i * w
@@ -37,8 +40,10 @@ function init_bg()
 
     add(second_row, {x1 = i * 32, w = 32, x2 = i * 32 + 32 })
 
-    add(third_row, { x1 = i * 32, w= 32, x2 = i * 32 + 32})
+    add(third_row, { x1 = i * 32, w= 32, x2 = i * 32 + 32 })
   end
+
+  create_land()
 end
 
 function debug(str, x, y, c)
@@ -72,18 +77,27 @@ function _draw()
     spr(70, third_row[i].x1, 48, 4, 2) -- third row
   end
 
+  -- draw static middle row
+  for i = 0, 7 do
+    spr(96, i * 16, 64, 2, 2)
+  end
+
+
   -- draw land
-  spr(192, 0, 64, 4, 4) -- top end
-  spr(232, 0, 96, 4, 2) -- bottom end
-  spr(196, 32, 64, 4, 4) -- top middle
-  spr(200, 32, 96, 4, 2) -- bottom middle
+  draw_land()
 
   -- draw player
   spr(player.spr, player.x, player.y, player.size, player.size)
 
+  -- draw shadow
+  if land_top[1].x1 < 0 and land_top[#land_top].x1 > 0 then
+    spr(9, player.x + 2, player.y + 32, 2, 2)
+  end
+
   -- debug
-  -- debug("first: "..#first_row, 0, 90, 7)
-  -- debug("second: "..#second_row, 0, 98, 7)
+  -- debug(land_top[#land_top].x2, 0, 90, 7)
+  -- if (is_offscreen_left(land_top[1].x2)) debug("resetting land", 0, 80, 7)
+  -- debug("second: "..#land_bottom, 0, 98, 7)
   -- debug("third: "..#third_row, 0, 106, 7)
 end
 
@@ -95,13 +109,53 @@ function draw_grid()
   end
 end
 
+function create_land()
+  for i = 0, 10 do
+    add(land_top, { x1 = i * 32, w= 32, x2 = i * 32 + 32})
+    add(land_bottom, { x1 = i * 32, w= 32, x2 = i * 32 + 32})
+  end
+end
+
+function reset_land()
+  for i = 1, #land_top do
+    local start = i * 32 + 128
+    land_top[i].x1 = start
+    land_top[i].x2 = land_top[i].x1 + 32
+    land_bottom[i].x1 = start
+    land_bottom[i].x2 = land_top[i].x1 + 32
+  end
+end
+
+function draw_land()
+  for i = 1, #land_top do
+    if is_moving_forward then
+      land_top[i].x1 -= land_speed
+      land_bottom[i].x1 -= land_speed
+    end
+
+    if i == 1 then
+      spr(192, land_top[i].x1, 64, 4, 4) -- top end
+      spr(232, land_bottom[i].x1, 96, 4, 2) -- bottom end
+    elseif i == #land_top then
+      spr(192, land_top[i].x1, 64, 4, 4, true) -- top end
+      spr(232, land_bottom[i].x1, 96, 4, 2, true) -- bottom end
+    else
+    spr(196, land_top[i].x1, 64, 4, 4) -- top middle
+    spr(200, land_bottom[i].x1, 96, 4, 2) -- bottom middle
+    end
+
+
+  end
+end
+
+
 function _update()
-  if btn(2) and player.y + 6 > 48 then -- up
+  if btn(2) and player.y + 6 > 38 then -- up
   -- + 6 so it looks like the player is driving close to the top edge
     player.y -= player.speed
   end
 
-  if btn(3) and player.y < 80 then -- down
+  if btn(3) and player.y < 72 then -- down
     player.y += player.speed
   end
 
@@ -115,6 +169,12 @@ function _update()
     for i = 1, #second_row do
       set_new_x2(second_row, i)
       set_new_x2(third_row, i)
+    end
+
+    -- update land x2 values
+    for i = 1, #land_top do
+      set_new_x2(land_top, i)
+      set_new_x2(land_bottom, i)
     end
 
     if (is_offscreen_left(first_row[1].x2)) del_first_value(first_row)
@@ -131,7 +191,20 @@ function _update()
       add_bg_spr(third_row, 32)
     end
 
-  end
+
+    -- update land
+      if (is_offscreen_left(land_top[#land_top].x2)) reset_land()
+    -- if is_offscreen_left(land_top[1].x2) then
+    --   del_first_value(land_top)
+    --   del_first_value(land_bottom)
+    -- end
+
+    -- if should_add_bg_spr(land_top[#land_top].x2) then
+    --   add_bg_spr(land_top, 32)
+    --   add_bg_spr(land_bottom, 32)
+    -- end
+
+  end -- end is_moving_forward
 end
 
 function add_bg_spr(tbl, w)
