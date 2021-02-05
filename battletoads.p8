@@ -9,13 +9,10 @@ function _init()
   bottom_bg_speed = 6
   middle_bg_speed = 1
   land_speed = 5
-  land_top = {}
-  land_bottom = {}
   top_startX = 0
   middle_startX = 0
   bottom_startX = 0
   land_startX = 0
-  create_land()
 
   player = {
     x = 8,
@@ -35,6 +32,7 @@ function _draw()
   palt(0, false) -- make black visible
   palt(1, true) -- make darkblue transparent
 
+  -- draw bg (minus land)
   for i = 0, 7 do
     -- top row 16x16
     spr(64, i * 16 + top_startX, 0, 2, 2)
@@ -85,13 +83,12 @@ function _draw()
   spr(player.spr, player.x, player.y + sin(time() * 2) * 3, player.size, player.size)
 
   -- draw player shadow
-  if land_top[1].x1 < 0 and land_top[#land_top].x1 > 0 then
     spr(9, player.x + 2, player.y + 32, 2, 2)
-  end
 
   -- debug
   draw_grid()
-  -- debug(startX, 0, 98, 7)
+  -- debug(land_startX, 0, 98, 7)
+end
 
 function x_should_reset(x)
   return x <= -128
@@ -104,44 +101,6 @@ function draw_grid()
     line (0, i * 16, 128, i * 16, 6)
   end
 end
-
-function create_land()
-  for i = 0, 10 do
-    add(land_top, { x1 = i * 32, w= 32, x2 = i * 32 + 32})
-    add(land_bottom, { x1 = i * 32, w= 32, x2 = i * 32 + 32})
-  end
-end
-
-function reset_land()
-  for i = 1, #land_top do
-    local start = i * 32 + 128
-    land_top[i].x1 = start
-    land_top[i].x2 = land_top[i].x1 + 32
-    land_bottom[i].x1 = start
-    land_bottom[i].x2 = land_top[i].x1 + 32
-  end
-end
-
-function draw_land()
-  for i = 1, #land_top do
-    if is_moving_forward then
-      land_top[i].x1 -= land_speed
-      land_bottom[i].x1 -= land_speed
-    end
-
-    if i == 1 then
-      spr(192, land_top[i].x1, 64, 4, 4) -- top end
-      spr(232, land_bottom[i].x1, 96, 4, 2) -- bottom end
-    elseif i == #land_top then
-      spr(192, land_top[i].x1, 64, 4, 4, true) -- top end
-      spr(232, land_bottom[i].x1, 96, 4, 2, true) -- bottom end
-    else
-    spr(196, land_top[i].x1, 64, 4, 4) -- top middle
-    spr(200, land_bottom[i].x1, 96, 4, 2) -- bottom middle
-    end
-  end
-end
-
 
 function _update()
   top_startX -= top_bg_speed
@@ -157,48 +116,14 @@ function _update()
   if btn(3) and player.y < 72 then -- down
     player.y += player.vy
   end
-
-  -- update land
-  if is_moving_forward then
-    for i = 1, #land_top do
-      set_new_x2(land_top, i)
-      set_new_x2(land_bottom, i)
-    end
-
-    if (is_offscreen_left(land_top[#land_top].x2)) reset_land()
-
-  end -- end is_moving_forward
-end
-
-function add_bg_spr_to_end(tbl, w)
-  local x1 = tbl[#tbl - 1].x2
-  add(tbl, { x1 = x1, w = w, x2 = x1 + w })
-end
-
-
-function should_add_bg_spr(x)
-  -- 148 smoother addition since it's out of view
-  return x <= 148
-end
-
-function del_first_value(tbl)
-  del(tbl, tbl[1])
-end
-
-function is_offscreen_left(x)
-  return x <= 0
-end
-
-function set_new_x2(tbl, idx)
-    tbl[idx].x2 = tbl[idx].x1 + tbl[idx].w
 end
 
 __gfx__
-00000000111111111110011111111111111111111111111111100111111111111111111111144444444441111111111111111111000000000000000000000000
-0000000011111111100bb001111111111111111111111111100bb001111111111111111114444444444444411111111111111111000000000000000000000000
-00700700111111110bbbbbb00111111111111111111111110bbbbbb0011111111111111144444444444444441111111111111111000000000000000000000000
-0007700011111111bbbbbbbbb00111111111111111111111bbbbbbbbb00111111111111114444444444444411111111111111111000000000000000000000000
-0007700011111110bbbb0bb7737011111111111111111110bbbb0bb7737011111111111111144444444441111111111111111111000000000000000000000000
+00000000111111111110011111111111111111111111111111100111111111111111111111100000000001111111111111111111000000000000000000000000
+0000000011111111100bb001111111111111111111111111100bb001111111111111111110000000000000011111111111111111000000000000000000000000
+00700700111111110bbbbbb00111111111111111111111110bbbbbb0011111111111111100000000000000001111111111111111000000000000000000000000
+0007700011111111bbbbbbbbb00111111111111111111111bbbbbbbbb00111111111111110000000000000011111111111111111000000000000000000000000
+0007700011111110bbbb0bb7737011111111111111111110bbbb0bb7737011111111111111100000000001111111111111111111000000000000000000000000
 0070070011111110bbbb0007070011111111111111111110bbbb0007070011111111111111111111111111111111111111111111000000000000000000000000
 0000000011111110bbbbb00000ee01111111111111111110bbbbb00000ee01111111111111111111111111111111111111111111000000000000000000000000
 0000000011111110bbbbb08eee8801111111111111111110bbbbb08eee8801111111111111111111111111111111111111111111000000000000000000000000
