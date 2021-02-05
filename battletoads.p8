@@ -27,6 +27,30 @@ function debug(str, x, y, c)
   print(str, x, y, c)
 end
 
+function draw_land(length, gap_start)
+  local land_endX = (length + 1) * 32 -- +1 for off screen padding
+
+  -- reset
+  -- gap_start is what px you want the next piece of land to start
+  if (land_startX <= -land_endX) land_startX = gap_start
+
+  for i = 1, length do
+    local flp = false
+    local top_spr = 196
+    local bottom_spr = 200
+
+    if (i == 1 or i == length)  then -- end piece
+      top_spr = 192
+      bottom_spr = 232
+    end
+
+    if (i == length) flp = true -- right end piece
+
+    spr(top_spr, i * 32 + land_startX, 64, 4, 4, flp) -- top
+    spr(bottom_spr, i * 32 + land_startX, 96, 4, 2, flp) -- bottom
+  end
+end
+
 function _draw()
  	cls()
   palt(0, false) -- make black visible
@@ -53,25 +77,7 @@ function _draw()
   end
 
   -- draw land
-  local length = 10
-  local land_endX = (length+1) * 32 -- +1 for off screen padding
-  if (land_startX <= -land_endX) land_startX = 128 -- reset
-
-  for i = 1, length do
-    local flp = false
-    local top_spr = 196
-    local bottom_spr = 200
-    if (i == 1 or i == 10)  then
-      top_spr = 192
-      bottom_spr = 232
-    end
-
-    if (i == length) flp = true
-
-    spr(top_spr, i * 32 + land_startX, 64, 4, 4, flp) -- top
-    spr(bottom_spr, i * 32 + land_startX, 96, 4, 2, flp) -- bottom
-
-  end
+  draw_land(20, 128)
 
   -- reset
   if (x_should_reset(top_startX)) top_startX = 0
