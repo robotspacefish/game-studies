@@ -14,7 +14,7 @@ function _init()
   top_startX = 0
   middle_startX = 0
   bottom_startX = 0
-
+  land_startX = 0
   create_land()
 
   player = {
@@ -54,13 +54,32 @@ function _draw()
     spr(204, i * 16 + bottom_startX + 128, 112, 2, 2)
   end
 
+  -- draw land
+  local length = 10
+  local land_endX = (length+1) * 32 -- +1 for off screen padding
+  if (land_startX <= -land_endX) land_startX = 128 -- reset
+
+  for i = 1, length do
+    local flp = false
+    local top_spr = 196
+    local bottom_spr = 200
+    if (i == 1 or i == 10)  then
+      top_spr = 192
+      bottom_spr = 232
+    end
+
+    if (i == length) flp = true
+
+    spr(top_spr, i * 32 + land_startX, 64, 4, 4, flp) -- top
+    spr(bottom_spr, i * 32 + land_startX, 96, 4, 2, flp) -- bottom
+
+  end
+
   -- reset
   if (x_should_reset(top_startX)) top_startX = 0
   if (x_should_reset(middle_startX)) middle_startX = 0
   if (x_should_reset(bottom_startX)) bottom_startX = 0
 
-  -- draw land
-  draw_land()
 
   -- draw player
   spr(player.spr, player.x, player.y + sin(time() * 2) * 3, player.size, player.size)
@@ -73,6 +92,7 @@ function _draw()
   -- debug
   draw_grid()
   -- debug(startX, 0, 98, 7)
+
 function x_should_reset(x)
   return x <= -128
 end
