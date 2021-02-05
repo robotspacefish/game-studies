@@ -55,9 +55,9 @@ function _draw()
   end
 
   -- reset
-  if (top_startX <= -128) top_startX = 0
-  if (middle_startX <= -128) middle_startX = 0
-  if (bottom_startX <= -128) bottom_startX = 0
+  if (x_should_reset(top_startX)) top_startX = 0
+  if (x_should_reset(middle_startX)) middle_startX = 0
+  if (x_should_reset(bottom_startX)) bottom_startX = 0
 
   -- draw land
   draw_land()
@@ -73,6 +73,8 @@ function _draw()
   -- debug
   draw_grid()
   -- debug(startX, 0, 98, 7)
+function x_should_reset(x)
+  return x <= -128
 end
 
 function draw_grid()
