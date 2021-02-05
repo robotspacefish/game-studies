@@ -6,9 +6,9 @@ function _init()
 
   is_moving_forward = true
   top_bg_speed = 5
-  bottom_bg_speed = 5
-  middle_bg_speed = 2
-  land_speed = 8
+  bottom_bg_speed = 6
+  middle_bg_speed = 1
+  land_speed = 5
   land_top = {}
   land_bottom = {}
   top_startX = 0
