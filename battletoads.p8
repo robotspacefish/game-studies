@@ -5,20 +5,14 @@ __lua__
 function _init()
 
   is_moving_forward = true
-  top_bg_speed = 6
-  middle_bg_speed = 5
-  land_speed = 8
-  first_row = {}
-  second_row = {}
-  third_row = {}
-  bottom_row = {}
-  land_top = {}
-  land_bottom = {}
-  land_is_waiting = false
-
-  -- start_motion = false
-
-  init_bg()
+  top_bg_speed = 5
+  bottom_bg_speed = 6
+  middle_bg_speed = 1
+  land_speed = 5
+  top_startX = 0
+  middle_startX = 0
+  bottom_startX = 0
+  land_startX = 0
 
   player = {
     x = 8,
@@ -29,27 +23,32 @@ function _init()
   }
 end
 
-function init_bg()
-
-
-  for i = 0, 7 do
-    local w = 16
-    local x1 = i * w
-    local x2 = x1 + w
-    add(first_row, { x1 = x1, w = w, x2 = x2 })
-
-    add(second_row, {x1 = i * 32, w = 32, x2 = i * 32 + 32 })
-
-    add(third_row, { x1 = i * 32, w= 32, x2 = i * 32 + 32 })
-
-    add(bottom_row, { x1 = x1, w = w, x2 = x2 })
-  end
-
-  create_land()
-end
-
 function debug(str, x, y, c)
   print(str, x, y, c)
+end
+
+function draw_land(length, gap_start)
+  local land_endX = (length + 1) * 32 -- +1 for off screen padding
+
+  -- reset
+  -- gap_start is what px you want the next piece of land to start
+  if (land_startX <= -land_endX) land_startX = gap_start
+
+  for i = 1, length do
+    local flp = false
+    local top_spr = 196
+    local bottom_spr = 200
+
+    if (i == 1 or i == length)  then -- end piece
+      top_spr = 192
+      bottom_spr = 232
+    end
+
+    if (i == length) flp = true -- right end piece
+
+    spr(top_spr, i * 32 + land_startX, 64, 4, 4, flp) -- top
+    spr(bottom_spr, i * 32 + land_startX, 96, 4, 2, flp) -- bottom
+  end
 end
 
 function _draw()
@@ -57,50 +56,48 @@ function _draw()
   palt(0, false) -- make black visible
   palt(1, true) -- make darkblue transparent
 
-  -- draw_grid()
-
-  -- draw top row
-  for i = 1, #first_row do
-    if is_moving_forward then
-      first_row[i].x1 -= top_bg_speed
-    end
-
-    spr(64, first_row[i].x1, 0, 2, 2) -- first_row
-  end
-
-  -- draw second/third rows
-  for i = 1, #second_row do
-    if is_moving_forward then
-      second_row[i].x1 -= middle_bg_speed
-      third_row[i].x1 -= middle_bg_speed
-    end
-
-    spr(66, second_row[i].x1, 16, 4, 4) -- second row
-    spr(70, third_row[i].x1, 48, 4, 2) -- third row
-  end
-
-  -- draw static middle row
+  -- draw bg (minus land)
   for i = 0, 7 do
-    spr(96, i * 16, 64, 2, 2)
-  end
+    -- top row 16x16
+    spr(64, i * 16 + top_startX, 0, 2, 2)
+    spr(64, i * 16 + top_startX + 128, 0, 2, 2)
 
+    -- second row 32x32
+    spr(66, i * 32 + middle_startX, 16, 4, 4)
+
+    -- third row 32x16
+    spr(70, i * 32 + middle_startX, 48, 4, 2)
+
+    -- static middle row
+    spr(96, i * 16, 64, 2, 2)
+
+    -- bottom row 16x16
+    spr(204, i * 16 + bottom_startX, 112, 2, 2)
+    spr(204, i * 16 + bottom_startX + 128, 112, 2, 2)
+  end
 
   -- draw land
-  draw_land()
+  draw_land(20, 128)
+
+  -- reset
+  if (x_should_reset(top_startX)) top_startX = 0
+  if (x_should_reset(middle_startX)) middle_startX = 0
+  if (x_should_reset(bottom_startX)) bottom_startX = 0
+
 
   -- draw player
   spr(player.spr, player.x, player.y + sin(time() * 2) * 3, player.size, player.size)
 
-  -- draw shadow
-  if land_top[1].x1 < 0 and land_top[#land_top].x1 > 0 then
+  -- draw player shadow
     spr(9, player.x + 2, player.y + 32, 2, 2)
-  end
 
   -- debug
-  -- debug(player.y + sin(flr(rnd(20))), 0, 90, 7)
-  -- if (is_offscreen_left(land_top[1].x2)) debug("resetting land", 0, 80, 7)
-  -- debug("second: "..#land_bottom, 0, 98, 7)
-  -- debug("third: "..#third_row, 0, 106, 7)
+  draw_grid()
+  -- debug(land_startX, 0, 98, 7)
+end
+
+function x_should_reset(x)
+  return x <= -128
 end
 
 function draw_grid()
@@ -111,51 +108,12 @@ function draw_grid()
   end
 end
 
-function create_land()
-  for i = 0, 10 do
-    add(land_top, { x1 = i * 32, w= 32, x2 = i * 32 + 32})
-    add(land_bottom, { x1 = i * 32, w= 32, x2 = i * 32 + 32})
-    add(bottom_row, { x1 = i * 16, w= 16, x2 = i * 16 + 16})
-  end
-end
-
-function reset_land()
-  for i = 1, #land_top do
-    local start = i * 32 + 128
-    land_top[i].x1 = start
-    land_top[i].x2 = land_top[i].x1 + 32
-    land_bottom[i].x1 = start
-    land_bottom[i].x2 = land_top[i].x1 + 32
-  end
-end
-
-function draw_land()
-  for i = 1, #land_top do
-    if is_moving_forward then
-      land_top[i].x1 -= land_speed
-      land_bottom[i].x1 -= land_speed
-    end
-
-    if i == 1 then
-      spr(192, land_top[i].x1, 64, 4, 4) -- top end
-      spr(232, land_bottom[i].x1, 96, 4, 2) -- bottom end
-    elseif i == #land_top then
-      spr(192, land_top[i].x1, 64, 4, 4, true) -- top end
-      spr(232, land_bottom[i].x1, 96, 4, 2, true) -- bottom end
-    else
-    spr(196, land_top[i].x1, 64, 4, 4) -- top middle
-    spr(200, land_bottom[i].x1, 96, 4, 2) -- bottom middle
-    end
-  end
-
-  for i = 1, #bottom_row do
-    if (is_moving_forward) bottom_row[i].x1 -= land_speed
-    spr(204, bottom_row[i].x1, 112, 2, 2)
-  end
-end
-
-
 function _update()
+  top_startX -= top_bg_speed
+  middle_startX -= middle_bg_speed
+  bottom_startX -= bottom_bg_speed
+  land_startX -= land_speed
+
   if btn(2) and player.y + 6 > 38 then -- up
   -- + 6 so it looks like the player is driving close to the top edge
     player.y -= player.vy
@@ -164,91 +122,14 @@ function _update()
   if btn(3) and player.y < 72 then -- down
     player.y += player.vy
   end
-
-  if is_moving_forward then
-    -- update first row values
-    for i = 1, #first_row do
-      set_new_x2(first_row, i)
-    end
-
-    -- update second/third row values
-    for i = 1, #second_row do
-      set_new_x2(second_row, i)
-      set_new_x2(third_row, i)
-    end
-
-    -- update land x2 values
-    for i = 1, #land_top do
-      set_new_x2(land_top, i)
-      set_new_x2(land_bottom, i)
-    end
-
-    -- update bottom row values
-    for i = 1, #bottom_row do
-      set_new_x2(bottom_row, i)
-    end
-
-    if (is_offscreen_left(first_row[1].x2)) del_first_value(first_row)
-    -- if (is_offscreen_left(bottom_row[1].x2)) del_first_value(bottom_row)
-
-    if is_offscreen_left(second_row[1].x2) then
-      del_first_value(second_row)
-      del_first_value(third_row)
-    end
-
-    if (should_add_bg_spr(first_row[#first_row].x2)) add_bg_spr_to_end(first_row, 16 )
-    if (should_add_bg_spr(bottom_row[#first_row].x2)) add_bg_spr_to_end(bottom_row, 16 )
-
-    if should_add_bg_spr(second_row[#second_row].x2) then
-      add_bg_spr_to_end(second_row, 32)
-      add_bg_spr_to_end(third_row, 32)
-    end
-
-
-    -- update land
-      if (is_offscreen_left(land_top[#land_top].x2)) reset_land()
-    -- if is_offscreen_left(land_top[1].x2) then
-    --   del_first_value(land_top)
-    --   del_first_value(land_bottom)
-    -- end
-
-    -- if should_add_bg_spr(land_top[#land_top].x2) then
-    --   add_bg_spr(land_top, 32)
-    --   add_bg_spr(land_bottom, 32)
-    -- end
-
-  end -- end is_moving_forward
-end
-
-function add_bg_spr_to_end(tbl, w)
-  local x1 = tbl[#tbl - 1].x2
-  add(tbl, { x1 = x1, w = w, x2 = x1 + w })
-end
-
-
-function should_add_bg_spr(x)
-  -- 148 smoother addition since it's out of view
-  return x <= 148
-end
-
-function del_first_value(tbl)
-  del(tbl, tbl[1])
-end
-
-function is_offscreen_left(x)
-  return x <= 0
-end
-
-function set_new_x2(tbl, idx)
-    tbl[idx].x2 = tbl[idx].x1 + tbl[idx].w
 end
 
 __gfx__
-00000000111111111110011111111111111111111111111111100111111111111111111111144444444441111111111111111111000000000000000000000000
-0000000011111111100bb001111111111111111111111111100bb001111111111111111114444444444444411111111111111111000000000000000000000000
-00700700111111110bbbbbb00111111111111111111111110bbbbbb0011111111111111144444444444444441111111111111111000000000000000000000000
-0007700011111111bbbbbbbbb00111111111111111111111bbbbbbbbb00111111111111114444444444444411111111111111111000000000000000000000000
-0007700011111110bbbb0bb7737011111111111111111110bbbb0bb7737011111111111111144444444441111111111111111111000000000000000000000000
+00000000111111111110011111111111111111111111111111100111111111111111111111100000000001111111111111111111000000000000000000000000
+0000000011111111100bb001111111111111111111111111100bb001111111111111111110000000000000011111111111111111000000000000000000000000
+00700700111111110bbbbbb00111111111111111111111110bbbbbb0011111111111111100000000000000001111111111111111000000000000000000000000
+0007700011111111bbbbbbbbb00111111111111111111111bbbbbbbbb00111111111111110000000000000011111111111111111000000000000000000000000
+0007700011111110bbbb0bb7737011111111111111111110bbbb0bb7737011111111111111100000000001111111111111111111000000000000000000000000
 0070070011111110bbbb0007070011111111111111111110bbbb0007070011111111111111111111111111111111111111111111000000000000000000000000
 0000000011111110bbbbb00000ee01111111111111111110bbbbb00000ee01111111111111111111111111111111111111111111000000000000000000000000
 0000000011111110bbbbb08eee8801111111111111111110bbbbb08eee8801111111111111111111111111111111111111111111000000000000000000000000
