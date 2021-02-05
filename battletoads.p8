@@ -147,6 +147,7 @@ function _update()
   top_startX -= top_bg_speed
   middle_startX -= middle_bg_speed
   bottom_startX -= bottom_bg_speed
+  land_startX -= land_speed
 
   if btn(2) and player.y + 6 > 38 then -- up
   -- + 6 so it looks like the player is driving close to the top edge
